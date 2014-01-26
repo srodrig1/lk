@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008 Travis Geiselbrecht
+ * Copyright (c) 2013 Travis Geiselbrecht
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files
@@ -20,17 +20,24 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#ifndef __APP_TESTS_H
-#define __APP_TESTS_H
+#include <arch/arm.h>
+#include <stdbool.h>
 
-#include <lib/console.h>
+void arm_fpu_set_enable(bool enable)
+{
+    /* set enable bit in fpexc */
+    uint32_t val;
+    __asm__ volatile("vmrs  %0, fpexc" : "=r" (val));
+    if (enable)
+        val |= (1<<30);
+    else
+        val &= ~(1<<30);
+    __asm__ volatile("vmsr  fpexc, %0" :: "r" (val));
+}
 
-int thread_tests(void);
-void printf_tests(void);
-void clock_tests(void);
-void float_tests(void);
-void benchmarks(void);
-int fibo(int argc, const cmd_args *argv);
+void arm_fpu_undefined_instruction(void)
+{
+    arm_fpu_set_enable(true);
+}
 
-#endif
-
+/* vim: set ts=4 sw=4 expandtab: */

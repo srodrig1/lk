@@ -139,6 +139,10 @@ GEN_CP15_REG_FUNCS(vbar, 0, c12, c0, 0);
 
 void arm_invalidate_tlb(void);
 
+/* fpu */
+void arm_fpu_set_enable(bool enable);
+void arm_fpu_undefined_instruction(void);
+
 __END_CDECLS
 
 #endif

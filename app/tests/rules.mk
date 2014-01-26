@@ -10,6 +10,7 @@ MODULE_SRCS += \
 	$(LOCAL_DIR)/printf_tests.c \
 	$(LOCAL_DIR)/clock_tests.c \
 	$(LOCAL_DIR)/benchmarks.c \
+	$(LOCAL_DIR)/float.c \
 	$(LOCAL_DIR)/fibo.c
 
 MODULE_COMPILEFLAGS += -Wno-format

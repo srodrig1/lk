@@ -68,10 +68,12 @@ GLOBAL_DEFINES += \
 	ARM_WITH_THUMB=1 \
 	ARM_WITH_THUMB2=1 \
 	ARM_WITH_CACHE=1 \
-	ARM_WITH_L2=1
+	ARM_WITH_L2=1 \
+	__FPU_PRESENT=1
 GLOBAL_COMPILEFLAGS += -mcpu=$(ARM_CPU)
+#ENABLE_THUMB := false # XXX remove
 HANDLED_CORE := true
-#GLOBAL_COMPILEFLAGS += -mfpu=neon -mfloat-abi=softfp
+GLOBAL_COMPILEFLAGS += -mfpu=neon -mfloat-abi=softfp
 endif
 ifeq ($(ARM_CPU),arm1136j-s)
 GLOBAL_DEFINES += \
@@ -121,6 +123,7 @@ MODULE_SRCS += \
 	$(LOCAL_DIR)/arm/ops.S \
 	$(LOCAL_DIR)/arm/exceptions.S \
 	$(LOCAL_DIR)/arm/faults.c \
+	$(LOCAL_DIR)/arm/fpu.c \
 	$(LOCAL_DIR)/arm/mmu.c \
 	$(LOCAL_DIR)/arm/thread.c \
 	$(LOCAL_DIR)/arm/dcc.S

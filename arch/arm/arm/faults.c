@@ -87,6 +87,35 @@ void arm_syscall_handler(struct arm_fault_frame *frame)
 
 void arm_undefined_handler(struct arm_fault_frame *frame)
 {
+	inc_critical_section();
+
+	/* look at the undefined instruction, figure out if it's something we can handle */
+	bool in_thumb = frame->spsr & (1<<5);
+	if (in_thumb) {
+		frame->pc -= 2;
+	} else {
+		frame->pc -= 4;
+	}
+
+	uint32_t opcode = *(uint32_t *)frame->pc;
+	//dprintf(CRITICAL, "undefined opcode 0x%x\n", opcode);
+	if (in_thumb) {
+//		panic("unhandled undefined thumb opcode\n");
+	} else {
+#if __FPU_PRESENT
+		/* look for arm vfp/neon coprocessor instructions */
+		if (BITS_SHIFT(opcode, 27, 26)== 0x3) {
+			uint coprocessor = BITS_SHIFT(opcode, 11, 8);
+			if (coprocessor == 10 || coprocessor == 11) {
+				//dprintf(CRITICAL, "vfp instruction\n");
+				arm_fpu_undefined_instruction();
+				dec_critical_section();
+				return;
+			}
+		}
+#endif
+	}
+
 	exception_die(frame, "undefined abort, halting\n");
 }
 

@@ -21,4 +21,6 @@ MODULE_SRCS += \
 	$(LOCAL_DIR)/pure_virtual.cpp
 endif
 
+MODULE_COMPILEFLAGS += -mfloat-abi=soft
+
 include make/module.mk
